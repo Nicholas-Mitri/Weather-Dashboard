@@ -33,10 +33,29 @@ option = st.selectbox(
 if not place:
     st.warning("Please enter a location to get the forecast.")
 else:
-    st.subheader(f"{option} for the next {days} days in {place}")
+    st.subheader(f"{option} for the next {days} days in {place.title()}")
 
     data = backend.get_data(place, days, option)
-    # Create and display the plot
-    figure = px.line(title=f"{option} Forecast", labels={"x": "Date", "y": option})
 
-    st.plotly_chart(figure, use_container_width=True)
+    if option == "Temperature":
+        temperatures = [dict["main"]["temp"] for dict in data]
+        dates = [dict["dt_txt"] for dict in data]
+        # Create and display the plot
+        figure = px.line(
+            x=dates,
+            y=temperatures,
+            title=f"{option} Forecast",
+            labels={"x": "Date", "y": option},
+        )
+
+        st.plotly_chart(figure, use_container_width=True)
+    else:
+        images = {
+            "Clear": "images/clear.png",
+            "Clouds": "images/cloud.png",
+            "Rain": "images/rain.png",
+            "Snow": "images/snow.png",
+        }
+        sky_conditions = [dict["weather"][0]["main"] for dict in data]
+        image_paths = [images[condition] for condition in sky_conditions]
+        st.image(image_paths, width=100)
