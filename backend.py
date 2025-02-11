@@ -19,7 +19,7 @@ def get_data(place, forecast_days: int = 5, kind="Temperature"):
             - For Sky: List of weather condition descriptions
     """
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={place}&appid={API_KEY}"
-    response = requests.get(url).json()
+    response = requests.get(url, params={"units": "metric"}).json()
     filtered_data = response["list"][: 8 * forecast_days]
 
     return filtered_data
