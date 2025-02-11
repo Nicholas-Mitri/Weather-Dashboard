@@ -7,6 +7,7 @@ Uses Plotly for data visualization.
 
 import streamlit as st
 import plotly.express as px
+import backend
 
 # Set page configuration
 st.title("Weather Forecast for the Next Days")
@@ -34,7 +35,8 @@ if not place:
 else:
     st.subheader(f"{option} for the next {days} days in {place}")
 
+    data = backend.get_data(place, days, option)
     # Create and display the plot
-    # Note: Current figure is empty - needs data source
     figure = px.line(title=f"{option} Forecast", labels={"x": "Date", "y": option})
+
     st.plotly_chart(figure, use_container_width=True)
